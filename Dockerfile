@@ -6,7 +6,7 @@ COPY src ./src
 RUN mvn clean package -DskipTests
 
 # Fase de ejecución
-FROM openjdk:22
+FROM openjdk:21
 WORKDIR /app
 COPY --from=build /app/target/Dermacheck-0.0.1-SNAPSHOT.jar Dermacheck.jar
 EXPOSE 8080
