@@ -1,11 +1,13 @@
-FROM maven:3.8.1-jdk-22 AS build
+# Fase de construcción
+FROM maven:3.8.1-openjdk-22 AS build
 WORKDIR /app
-COPY . .
-RUN mvn clean package
+COPY pom.xml .
+COPY src ./src
+RUN mvn clean package -DskipTests
 
+# Fase de ejecución
 FROM openjdk:22
-VOLUME /tmp
+WORKDIR /app
+COPY --from=build /app/target/Dermacheck-0.0.1-SNAPSHOT.jar Dermacheck.jar
 EXPOSE 8080
-ARG JAR_FILE=target/Dermacheck-0.0.1-SNAPSHOT.jar
-ADD ${JAR_FILE} Dermacheck.jar
-ENTRYPOINT ["java","-jar","/Dermacheck.jar"]
+ENTRYPOINT ["java", "-jar", "/Dermacheck.jar"]
